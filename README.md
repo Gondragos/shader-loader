@@ -43,5 +43,33 @@ void main(void) {
 Learn more about loaders & webpack:
 http://webpack.github.io/docs/loaders.html
 
+## Options
+###chunkPath
+Path, where chunks are located
+``` javascript
+options: {
+    glsl: {
+        chunkPath: path.resolve(__dirname, "src/glsl/chunks")
+    }
+}
+```
+###chunkPrefix
+Customize, how import will be look like
+
+``` javascript
+options: {
+    glsl: {
+        chunkPrefix: '#include '
+    }
+}
+```
+
+``` glsl
+void main(void) {
+	#include snoise //replace by <path>/snoise.glsl
+}
+```
+
+
 ## License
 MIT (http://www.opensource.org/licenses/mit-license.php)

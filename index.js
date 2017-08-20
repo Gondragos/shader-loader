@@ -4,6 +4,7 @@ var loaderUtils = require('loader-utils')
 
 var chunks = {}
 var chunkPath = ""
+var chunkPrefix = "$"
 
 module.exports = function(source) {
 	this.cacheable && this.cacheable()
@@ -16,11 +17,16 @@ module.exports = function(source) {
 
 	var options = loaderUtils.getOptions(this) || {}
 
-	if(options.glsl && options.glsl.chunkPath){
-		chunkPath =  options.glsl.chunkPath
+	if(options.glsl) {
+		if (options.glsl.chunkPath) {
+			chunkPath = options.glsl.chunkPath
+		}
+		if(options.glsl.chunkPrefix){
+			chunkPrefix = options.glsl.chunkPrefix
+		}
 	}
 
-	var r = /\$[\w-.]+/gi
+	var r = new RegExp(RegExpEscape(chunkPrefix)+"[\\w-.]+","gi");
 	var match = source.match( r )
 
 	if(match){
@@ -46,7 +52,7 @@ module.exports = function(source) {
 }
 
 function loadChunk(key, uid){
-	var name = key.substr(1, key.length-1)
+	var name = key.substr(chunkPrefix.length, key.length-1)
 	var headerPath = path.resolve(chunkPath+"/"+name+".glsl");
 	this.dependency(headerPath)
 	fs.readFile(headerPath, "utf-8", function(err, content) {
@@ -74,10 +80,14 @@ function onChunksLoaded(){
 	keys.reverse()
 	for(var i=0; i < keys.length; i++){
 		var key = keys[i]
-		var re = new RegExp("(\\"+key+")", "gi")
+		var re = new RegExp("("+RegExpEscape(key)+")", "gi")
 		this.finalString = this.finalString.replace(re,chunks[key])
 	}
 
 	this.finalString = "module.exports = " + JSON.stringify(this.finalString)
 	this.callback(null, this.finalString)
+}
+
+function RegExpEscape(str) {
+	return str.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
 }
