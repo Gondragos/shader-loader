@@ -26,7 +26,7 @@ module.exports = function(source) {
 		}
 	}
 
-	var r = new RegExp(RegExpEscape(chunkPrefix)+"[\\w-.]+","gi");
+	var r = new RegExp(RegExpEscape(chunkPrefix)+"[\\w-.\/]+","gi");
 	var match = source.match( r )
 
 	if(match){
