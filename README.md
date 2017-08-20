@@ -44,7 +44,7 @@ Learn more about loaders & webpack:
 http://webpack.github.io/docs/loaders.html
 
 ## Options
-###chunkPath
+### chunkPath
 Path, where chunks are located
 ``` javascript
 options: {
@@ -53,7 +53,7 @@ options: {
     }
 }
 ```
-###chunkPrefix
+### chunkPrefix
 Customize, how import will be look like
 
 ``` javascript
